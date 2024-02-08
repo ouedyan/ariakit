@@ -30,7 +30,7 @@
   },
   "keywords": ["ariakit", "react", "a11y", "ui", "toolkit", "components"],
   "dependencies": {
-    "@ariakit/react-core": "0.4.15"
+    "@ariakit/react-core": "npm:@ouedyan/ariakit-react-core@0.4.15"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
