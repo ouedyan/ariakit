@@ -2,11 +2,7 @@ import type { ElementType, KeyboardEvent } from "react";
 import { useRef } from "react";
 import { isTextField } from "@ariakit/core/utils/dom";
 import { isSelfTarget } from "@ariakit/core/utils/events";
-import {
-  invariant,
-  normalizeString,
-  removeUndefinedValues,
-} from "@ariakit/core/utils/misc";
+import { invariant, removeUndefinedValues } from "@ariakit/core/utils/misc";
 import { useEvent } from "../utils/hooks.js";
 import { createElement, createHook, forwardRef } from "../utils/system.js";
 import type { Options, Props } from "../utils/types.js";
@@ -51,33 +47,41 @@ function getEnabledItems(items: CompositeStoreItem[]) {
   return items.filter((item) => !item.disabled);
 }
 
-function itemTextStartsWith(item: CompositeStoreItem, text: string) {
+function itemTextStartsWith(
+  item: CompositeStoreItem,
+  text: string,
+  locale?: string,
+) {
   const itemText = item.element?.textContent || item.children;
   if (!itemText) return false;
-  return normalizeString(itemText)
+  return itemText
     .trim()
-    .toLowerCase()
-    .startsWith(text.toLowerCase());
+    .toLocaleLowerCase(locale || document.documentElement.lang)
+    .startsWith(
+      text.toLocaleLowerCase(locale || document.documentElement.lang),
+    );
 }
 
 function getSameInitialItems(
   items: CompositeStoreItem[],
   char: string,
   activeId?: string | null,
+  locale?: string,
 ) {
   if (!activeId) return items;
   const activeItem = items.find((item) => item.id === activeId);
   if (!activeItem) return items;
-  if (!itemTextStartsWith(activeItem, char)) return items;
+  if (!itemTextStartsWith(activeItem, char, locale)) return items;
   // Typing "oo" will match "oof" instead of moving to the next item.
-  if (chars !== char && itemTextStartsWith(activeItem, chars)) return items;
+  if (chars !== char && itemTextStartsWith(activeItem, chars, locale))
+    return items;
   // If we're looping through the items, we'll want to reset the chars so "oo"
   // becomes just "o".
   chars = char;
   // flipItems will put the previous items at the end of the list so we can loop
   // through them.
   return flipItems(
-    items.filter((item) => itemTextStartsWith(item, chars)),
+    items.filter((item) => itemTextStartsWith(item, chars, locale)),
     activeId,
   ).filter((item) => item.id !== activeId);
 }
@@ -136,8 +140,15 @@ export const useCompositeTypeahead = createHook<
     // Always consider the lowercase version of the key.
     const char = event.key.toLowerCase();
     chars += char;
-    enabledItems = getSameInitialItems(enabledItems, char, activeId);
-    const item = enabledItems.find((item) => itemTextStartsWith(item, chars));
+    enabledItems = getSameInitialItems(
+      enabledItems,
+      char,
+      activeId,
+      props.lang,
+    );
+    const item = enabledItems.find((item) =>
+      itemTextStartsWith(item, chars, props.lang),
+    );
     if (item) {
       store.move(item.id);
     } else {

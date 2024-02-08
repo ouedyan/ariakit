@@ -1,5 +1,5 @@
 {
-  "name": "@ariakit/react-core",
+  "name": "@ouedyan/ariakit-react-core",
   "version": "0.4.1",
   "description": "Ariakit React core",
   "sideEffects": false,
