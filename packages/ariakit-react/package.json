@@ -37,7 +37,7 @@
     "components"
   ],
   "dependencies": {
-    "@ariakit/react-core": "0.4.1"
+    "@ariakit/react-core": "npm:@ouedyan/ariakit-react-core@0.4.1"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0",
