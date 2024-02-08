@@ -1,5 +1,5 @@
 {
-  "name": "@ariakit/react",
+  "name": "@ouedyan/ariakit-react",
   "version": "0.4.14",
   "description": "Toolkit for building accessible web apps with React",
   "sideEffects": false,
