@@ -4,10 +4,7 @@ import {
   sortBasedOnDOMPosition,
 } from "@ariakit/core/utils/dom";
 import { isSelfTarget } from "@ariakit/core/utils/events";
-import {
-  invariant,
-  removeUndefinedValues,
-} from "@ariakit/core/utils/misc";
+import { invariant, removeUndefinedValues } from "@ariakit/core/utils/misc";
 import type { ElementType, KeyboardEvent } from "react";
 import { useRef } from "react";
 import { useEvent } from "../utils/hooks.ts";
@@ -54,8 +51,13 @@ function getEnabledItems(items: CompositeStoreItem[]) {
   return items.filter((item) => !item.disabled);
 }
 
-function itemTextStartsWith(item: CompositeStoreItem, text: string, locale?: string,) {
+function itemTextStartsWith(
+  item: CompositeStoreItem,
+  text: string,
+  locale?: string,
+) {
   const itemText =
+    item.typeaheadText ||
     item.element?.textContent ||
     item.children ||
     // The composite item object itself doesn't include a value property, but
